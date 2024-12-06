@@ -3,6 +3,7 @@ package 합;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class BOJ1132 {
@@ -12,82 +13,44 @@ public class BOJ1132 {
 		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 		int N = Integer.parseInt(st.nextToken());
 
-		boolean[] appeared = new boolean[10];
-		int count = 0;
+		long[] count = new long[10];
+		int[] nonzero = new int[10];
 		char[][] nums = new char[N][];
 		for (int i = 0; i < N; ++i) {
 			nums[i] = br.readLine().toCharArray();
-			for (int j = 0; j < nums[i].length; ++j) {
-				if (!appeared[nums[i][j] - 'A']) {
-					appeared[nums[i][j] - 'A'] = true;
-					++count;
+			long d = 1;
+			for (int j = nums[i].length - 1; j >= 0; --j, d *= 10) {
+				int index = nums[i][j] - 'A';
+				count[index] += d;
+				if (j == 0) {
+					nonzero[index] = 1;
 				}
 			}
 		}
 
-		int[] arr = new int[count];
-		for (int i = 0; i < count; ++i) {
-			arr[i] = 10 - count + i;
+		Integer[] list = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+		Arrays.sort(list, (l1, l2) -> Long.compare(count[l1], count[l2]));
+
+		while (nonzero[list[0]] == 1) {
+			int j = 0;
+			while (j < 10) {
+				if (nonzero[list[j]] == 0) {
+					int temp = list[j];
+					for (int i = j; i > 0; --i) {
+						list[i] = list[i - 1];
+					}
+					list[0] = temp;
+					break;
+				}
+				++j;
+			}
 		}
 
 		long answer = 0;
-		do {
-			long result = cal(nums, arr);
-			if (result > answer) {
-				answer = result;
-			}
-		} while (nextPermutation(arr));
-
+		for (int i = 0; i < 10; ++i) {
+			int index = list[i];
+			answer += count[index] * i;
+		}
 		System.out.println(answer);
-	}
-
-	private static long cal(char[][] nums, int[] arr) {
-		long result = 0;
-		for (char[] str : nums) {
-			long num = 0;
-			long d = (long) Math.pow(10, str.length - 1);
-
-			if (arr[str[0] - 'A'] == 0) {
-				return 0;
-			}
-
-			for (char c : str) {
-				num += arr[c - 'A'] * d;
-				d /= 10;
-			}
-			result += num;
-		}
-		return result;
-	}
-
-	private static boolean nextPermutation(int[] arr) {
-		int i = arr.length - 1;
-
-		while (i > 0 && arr[i - 1] >= arr[i]) {
-			--i;
-		}
-
-		if (i <= 0) {
-			return false;
-		}
-
-		int j = arr.length - 1;
-		while (arr[j] <= arr[i - 1]) {
-			--j;
-		}
-
-		int temp = arr[i - 1];
-		arr[i - 1] = arr[j];
-		arr[j] = temp;
-
-		j = arr.length - 1;
-		while (i < j) {
-			temp = arr[i];
-			arr[i] = arr[j];
-			arr[j] = temp;
-			++i;
-			--j;
-		}
-		return true;
 	}
 }
