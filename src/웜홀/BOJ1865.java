@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
-import java.util.TreeSet;
 
 public class BOJ1865 {
 
@@ -22,13 +21,6 @@ public class BOJ1865 {
 			int N = Integer.parseInt(st.nextToken());
 			int M = Integer.parseInt(st.nextToken());
 			int W = Integer.parseInt(st.nextToken());
-
-			TreeSet<Integer>[] arr = new TreeSet[N + 1];
-			int[][] cost = new int[N + 1][N + 1];
-
-			for (int i = 1; i <= N; ++i) {
-				arr[i] = new TreeSet<>();
-			}
 
 			ArrayList<Edge> edges = new ArrayList<>();
 
