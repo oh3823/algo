@@ -22,24 +22,21 @@ public class BOJ2473 {
 		Arrays.sort(arr);
 		long min = Long.MAX_VALUE;
 		long[] answer = new long[3];
-		for (int i = 0; i < N; ++i) {
-			for (int j = i + 1; j < N; ++j) {
-				long sum = arr[i] + arr[j];
-				int index = Arrays.binarySearch(arr, j + 1, N, -sum);
-				int k = index < 0 ? -index - 1 : index;
-				for (int l = k - 1; l <= k; ++l) {
-					if (l <= j || l >= N) {
-						continue;
-					}
-					long abs = Math.abs(sum + arr[l]);
-					if (abs < min) {
-						min = abs;
-						answer[0] = arr[i];
-						answer[1] = arr[j];
-						answer[2] = arr[l];
-					}
+		for (int k = 0; k < N; ++k) {
+			int i = k + 1, j = N - 1;
+			while (i < j) {
+				long sum = arr[i] + arr[j] + arr[k];
+				if (Math.abs(sum) < min) {
+					min = Math.abs(sum);
+					answer[0] = arr[k];
+					answer[1] = arr[i];
+					answer[2] = arr[j];
 				}
-
+				if (sum < 0) {
+					++i;
+				} else {
+					--j;
+				}
 			}
 		}
 
